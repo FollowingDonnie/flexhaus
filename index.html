@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FlexHaus | The Comeback</title>
+  <meta name="description" content="Book your FlexHaus comeback class. Your spot's still here.">
+  <style>
+    :root {
+      --carbon: #0e1116;
+      --carbon-2: #151a21;
+      --chalk: #f5f5f2;
+      --muted: #bfc4bd;
+      --volt: #c6f24e;
+      --ember: #ff5a3c;
+      --line: rgba(245, 245, 242, 0.16);
+      --focus: #ffffff;
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--carbon);
+      color: var(--chalk);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(198, 242, 78, 0.14), transparent 28rem),
+        radial-gradient(circle at 86% 28%, rgba(255, 90, 60, 0.08), transparent 24rem),
+        linear-gradient(180deg, rgba(14, 17, 22, 0.2), var(--carbon) 70%);
+      z-index: -3;
+    }
+
+    #scene {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      opacity: 0.88;
+    }
+
+    body.no-webgl #scene,
+    body.reduced-motion #scene { display: none; }
+
+    body.no-webgl::after,
+    body.reduced-motion::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -2;
+      background:
+        linear-gradient(120deg, transparent 0 42%, rgba(198, 242, 78, 0.18) 42% 43%, transparent 43% 100%),
+        radial-gradient(circle at 50% 18%, rgba(198, 242, 78, 0.18), transparent 19rem);
+    }
+
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem clamp(1rem, 4vw, 3rem);
+      background: linear-gradient(180deg, rgba(14, 17, 22, 0.9), rgba(14, 17, 22, 0));
+    }
+
+    .brand {
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.96rem;
+    }
+
+    .brand span { color: var(--volt); }
+
+    .topbar a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 0 1rem;
+      border: 1px solid rgba(198, 242, 78, 0.42);
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 800;
+      background: rgba(14, 17, 22, 0.55);
+      backdrop-filter: blur(10px);
+    }
+
+    main {
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    section {
+      min-height: 88vh;
+      display: grid;
+      align-items: center;
+      padding: 6rem 0;
+    }
+
+    .hero {
+      min-height: 100vh;
+      padding-top: 8rem;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      width: fit-content;
+      padding: 0.45rem 0.7rem;
+      border: 1px solid rgba(198, 242, 78, 0.36);
+      color: var(--volt);
+      background: rgba(198, 242, 78, 0.08);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 880px;
+      margin: 1.2rem 0 1rem;
+      font-size: clamp(4rem, 13vw, 11rem);
+      line-height: 0.82;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      font-weight: 950;
+    }
+
+    h2 {
+      max-width: 780px;
+      font-size: clamp(2.35rem, 7vw, 6rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      font-weight: 950;
+      margin-bottom: 1rem;
+    }
+
+    .lead {
+      max-width: 630px;
+      font-size: clamp(1.16rem, 2.5vw, 1.55rem);
+      line-height: 1.35;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      align-items: center;
+      margin: 2rem 0 1rem;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 0 1.25rem;
+      border-radius: 999px;
+      background: var(--volt);
+      color: #111406;
+      text-decoration: none;
+      font-weight: 950;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px rgba(198, 242, 78, 0.28), 0 0 36px rgba(198, 242, 78, 0.24);
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--chalk);
+      border: 1px solid rgba(245, 245, 242, 0.24);
+      box-shadow: none;
+    }
+
+    .proof-line {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .beat, .stat, .booking-panel {
+      border: 1px solid var(--line);
+      background: rgba(21, 26, 33, 0.78);
+      backdrop-filter: blur(14px);
+      border-radius: 8px;
+      padding: 1.2rem;
+    }
+
+    .beat b {
+      display: block;
+      color: var(--volt);
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.7rem;
+    }
+
+    .beat p, .stat p { color: var(--muted); margin-bottom: 0; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1rem;
+      align-items: stretch;
+      margin-top: 1.5rem;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      line-height: 0.9;
+      color: var(--volt);
+      letter-spacing: 0;
+    }
+
+    .stat em {
+      display: block;
+      color: var(--chalk);
+      font-style: normal;
+      font-weight: 900;
+      margin: 0.4rem 0 0.7rem;
+      text-transform: uppercase;
+    }
+
+    .booking-panel {
+      max-width: 760px;
+      margin-left: auto;
+      border-color: rgba(198, 242, 78, 0.44);
+      box-shadow: 0 0 70px rgba(198, 242, 78, 0.12);
+    }
+
+    .booking-panel h2 { font-size: clamp(2.2rem, 6vw, 4.5rem); }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    label {
+      display: grid;
+      gap: 0.4rem;
+      color: var(--chalk);
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    input, select {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 6px;
+      border: 1px solid rgba(245, 245, 242, 0.22);
+      background: rgba(14, 17, 22, 0.95);
+      color: var(--chalk);
+      padding: 0 0.9rem;
+      font: inherit;
+    }
+
+    .wide { grid-column: 1 / -1; }
+
+    .consent {
+      display: flex;
+      gap: 0.7rem;
+      align-items: flex-start;
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .consent input {
+      width: 20px;
+      min-width: 20px;
+      height: 20px;
+      min-height: 20px;
+      margin-top: 0.15rem;
+      accent-color: var(--volt);
+    }
+
+    .status {
+      min-height: 1.5rem;
+      color: var(--volt);
+      font-weight: 800;
+    }
+
+    footer {
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 2rem 0 3rem;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 760px) {
+      .topbar { padding: 0.75rem 1rem; }
+      .topbar a { min-height: 38px; padding: 0 0.75rem; font-size: 0.9rem; }
+      section { min-height: auto; padding: 5rem 0; }
+      .hero { min-height: 92vh; }
+      .grid, .stat-grid, form { grid-template-columns: 1fr; }
+      .booking-panel { margin-left: 0; }
+      h1 { font-size: clamp(3.4rem, 20vw, 7rem); }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <header class="topbar">
+    <div class="brand">Flex<span>Haus</span></div>
+    <a href="#book">Book class</a>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div>
+        <span class="eyebrow">The Comeback</span>
+        <h1>Your spot's still here.</h1>
+        <p class="lead">No guilt. No reset speech. Just one saved class, one familiar room, and the next good move back into the habit.</p>
+        <div class="actions">
+          <a class="btn" href="#book">Book your comeback class</a>
+          <a class="btn secondary" href="#proof">See why this matters</a>
+        </div>
+        <p class="proof-line">Built for the 236 FlexHaus members who are still paying but have lost the rhythm.</p>
+      </div>
+    </section>
+
+    <section id="momentum">
+      <div>
+        <span class="eyebrow">Restart tiny</span>
+        <h2>One class is enough to begin again.</h2>
+        <p class="lead">The hardest part is not fitness. It is reopening the door after a few missed weeks. So we made the door obvious.</p>
+        <div class="grid">
+          <article class="beat">
+            <b>No shame</b>
+            <p>A pause is not a failure. The page speaks like a coach who remembers your name.</p>
+          </article>
+          <article class="beat">
+            <b>Low friction</b>
+            <p>Your comeback class is pre-selected. Change it if you want, book it if you are ready.</p>
+          </article>
+          <article class="beat">
+            <b>Real timing</b>
+            <p>Slots mirror the patterns members already choose: after work, early morning, and easy off-peak returns.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="proof">
+      <div>
+        <span class="eyebrow">From the bookings export</span>
+        <h2>The leak is before cancellation.</h2>
+        <p class="lead">FlexHaus does not need another loud acquisition push. It needs to bring back members who are still paying before they disappear for good.</p>
+        <div class="stat-grid">
+          <article class="stat">
+            <strong>236</strong>
+            <em>active at-risk members</em>
+            <p>Active members with 2 or fewer attended classes, 30+ days since last visit, or 1 or fewer bookings in the last 60 days.</p>
+          </article>
+          <article class="stat">
+            <strong>EUR 10,692</strong>
+            <em>monthly value at stake</em>
+            <p>Computed from the monthly fees of those 236 members. The 30-day metric: comeback-class bookings.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="book">
+      <div class="booking-panel">
+        <span class="eyebrow">Saved spot</span>
+        <h2>Book your comeback class.</h2>
+        <p class="lead">Pick the class that feels easiest to return to. We will send the booking request to the FlexHaus desk and you can opt out of follow-up anytime.</p>
+        <form id="bookingForm" action="mailto:hello@flexhaus.example?subject=Comeback%20class%20booking" method="post" enctype="text/plain">
+          <label>
+            Name
+            <input name="name" autocomplete="name" required placeholder="Your name">
+          </label>
+          <label>
+            Email or phone
+            <input name="contact" autocomplete="email" required placeholder="you@example.com">
+          </label>
+          <label>
+            Comeback class
+            <select name="class" required>
+              <option>Spin with Marta</option>
+              <option>Strength with Marta</option>
+              <option>HIIT with Conor</option>
+              <option>Yoga with Aisling</option>
+              <option>Boxing with Niall</option>
+            </select>
+          </label>
+          <label>
+            Preferred slot
+            <select name="slot" required>
+              <option>Tuesday 17:00</option>
+              <option>Wednesday 18:00</option>
+              <option>Thursday 19:00</option>
+              <option>Friday 07:00</option>
+              <option>Saturday 09:00</option>
+            </select>
+          </label>
+          <label class="wide consent">
+            <input type="checkbox" name="consent" required>
+            <span>I agree that FlexHaus can contact me about this comeback booking. No marketing tricks; I can opt out at any time.</span>
+          </label>
+          <div class="wide actions">
+            <button class="btn" type="submit">Send booking request</button>
+            <p class="status" id="formStatus" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>FlexHaus comeback campaign. Data claims are computed from the synthetic AI Badge exercise export.</p>
+  </footer>
+
+  <script>
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) document.body.classList.add("reduced-motion");
+
+    const form = document.getElementById("bookingForm");
+    const status = document.getElementById("formStatus");
+    form.addEventListener("submit", () => {
+      status.textContent = "Opening your email app with the booking request.";
+      form.closest(".booking-panel").animate(
+        [{ boxShadow: "0 0 70px rgba(198, 242, 78, 0.12)" }, { boxShadow: "0 0 120px rgba(198, 242, 78, 0.36)" }],
+        { duration: 520, iterations: 2, direction: "alternate" }
+      );
+    });
+
+    function hasWebGL() {
+      try {
+        const c = document.createElement("canvas");
+        return !!(window.WebGLRenderingContext && (c.getContext("webgl") || c.getContext("experimental-webgl")));
+      } catch (_) {
+        return false;
+      }
+    }
+
+    if (!hasWebGL()) document.body.classList.add("no-webgl");
+  </script>
+
+  <script type="module">
+    if (document.body.classList.contains("no-webgl") || document.body.classList.contains("reduced-motion")) {
+      // Static fallback is active; the booking flow remains fully usable.
+    } else {
+    const THREE = await import("three");
+    const { EffectComposer } = await import("three/addons/postprocessing/EffectComposer.js");
+    const { RenderPass } = await import("three/addons/postprocessing/RenderPass.js");
+    const { UnrealBloomPass } = await import("three/addons/postprocessing/UnrealBloomPass.js");
+
+    const canvas = document.getElementById("scene");
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x0e1116, 0.055);
+    const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 120);
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const pulseMat = new THREE.MeshBasicMaterial({ color: 0xc6f24e });
+    const emberMat = new THREE.MeshBasicMaterial({ color: 0xff5a3c });
+    const darkMat = new THREE.MeshStandardMaterial({ color: 0x161c22, roughness: 0.72, metalness: 0.12 });
+
+    const floor = new THREE.GridHelper(56, 28, 0xc6f24e, 0x33402d);
+    floor.position.y = -2.4;
+    floor.material.opacity = 0.22;
+    floor.material.transparent = true;
+    group.add(floor);
+
+    const rigGeometry = new THREE.BoxGeometry(0.08, 2.8, 0.08);
+    const rig = new THREE.InstancedMesh(rigGeometry, darkMat, 30);
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < 30; i++) {
+      dummy.position.set((i % 10 - 4.5) * 1.3, -1.05, -10 - Math.floor(i / 10) * 4);
+      dummy.rotation.z = i % 3 === 0 ? 0.22 : 0;
+      dummy.updateMatrix();
+      rig.setMatrixAt(i, dummy.matrix);
+    }
+    group.add(rig);
+
+    const pathPoints = [];
+    for (let i = 0; i < 90; i++) {
+      const t = i / 89;
+      pathPoints.push(new THREE.Vector3((Math.sin(t * Math.PI * 4) * 0.9), -0.4 + Math.sin(t * Math.PI * 8) * 0.18, -2 - t * 30));
+    }
+    const curve = new THREE.CatmullRomCurve3(pathPoints);
+    const tube = new THREE.TubeGeometry(curve, 160, 0.026, 8, false);
+    const line = new THREE.Mesh(tube, new THREE.MeshBasicMaterial({ color: 0xc6f24e, transparent: true, opacity: 0.68 }));
+    group.add(line);
+
+    const pulse = new THREE.Mesh(new THREE.SphereGeometry(0.18, 24, 12), pulseMat);
+    group.add(pulse);
+
+    const cardGlow = new THREE.Mesh(new THREE.CircleGeometry(2.8, 48), new THREE.MeshBasicMaterial({ color: 0xc6f24e, transparent: true, opacity: 0.16, side: THREE.DoubleSide }));
+    cardGlow.rotation.x = -Math.PI / 2;
+    cardGlow.position.set(0, -2.35, -29);
+    group.add(cardGlow);
+
+    const count = window.innerWidth < 700 ? 420 : 840;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 26;
+      positions[i * 3 + 1] = Math.random() * 8 - 2.2;
+      positions[i * 3 + 2] = -Math.random() * 34;
+    }
+    const particles = new THREE.BufferGeometry();
+    particles.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    group.add(new THREE.Points(particles, new THREE.PointsMaterial({ color: 0xf5f5f2, size: 0.025, transparent: true, opacity: 0.58 })));
+
+    scene.add(new THREE.AmbientLight(0xf5f5f2, 0.42));
+    const light = new THREE.PointLight(0xc6f24e, 8, 24);
+    scene.add(light);
+    const ember = new THREE.PointLight(0xff5a3c, 2.5, 16);
+    ember.position.set(-4, 2, -12);
+    scene.add(ember);
+
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    composer.addPass(new UnrealBloomPass(new THREE.Vector2(1, 1), 0.72, 0.72, 0.18));
+
+    function resize() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      renderer.setSize(w, h, false);
+      composer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener("resize", resize, { passive: true });
+    resize();
+
+    let current = 0;
+    function scrollProgress() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    }
+
+    function tick(time) {
+      const target = scrollProgress();
+      current += (target - current) * 0.045;
+      const travel = current * 0.92 + ((time * 0.00008) % 0.08);
+      const point = curve.getPointAt(Math.min(0.99, travel));
+      pulse.position.copy(point);
+      light.position.copy(point).add(new THREE.Vector3(0, 1.3, 1.2));
+
+      camera.position.set(Math.sin(current * Math.PI * 1.5) * 1.8, 1.8 - current * 0.8, 4 - current * 24);
+      camera.lookAt(0, -0.45, -8 - current * 21);
+      group.rotation.y = Math.sin(time * 0.00035) * 0.05;
+      cardGlow.scale.setScalar(1 + Math.sin(time * 0.004) * 0.08);
+      composer.render();
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    }
+  </script>
+</body>
+</html>
